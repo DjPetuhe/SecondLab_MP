@@ -88,6 +88,24 @@ fun date_to_string (date : int*int*int) =
     31,30,31,31,30,31,30,31] : int list
     in number_before_reaching_sum(day, month_days) end
 
+(*tenth task*)
+fun month_range (day1 : int, day2 : int) =
+    if day1 > day2
+    then []
+    else what_month(day1)::month_range(day1 + 1, day2)
+
+(*eleventh task*)
+fun oldest (dateList : (int*int*int) list) =
+    case dateList of
+    [] => NONE
+    | _ => let fun is_older (dateList1 : (int*int*int) list, oldestDate : int*int*int) =
+                if null dateList1
+                then SOME (oldestDate)
+                else if is_order(oldestDate, (hd dateList1))
+                then is_older((tl dateList1), oldestDate)
+                else is_older((tl dateList1), (hd dateList1))
+            in is_older((tl dateList), (hd dateList)) end
+
 (*Test for first task*)
 fun provided_test1 () = 
     let val date1 = (2022,6,21)
@@ -197,6 +215,30 @@ fun provided_test9() =
     what_month(day3))
     end
 
+(*Test for tenth task*)
+fun provided_test10() =
+    let val day1 = 31 : int
+        val day2 = 32 : int
+        val day3 = 365 : int
+        val day4 = 330 : int
+    in
+    (month_range(day1, day2),
+    month_range(day3, day4),
+    month_range(day4, day3))
+    end
+
+(*Test for eleventh task*)
+fun provided_test11() =
+    let val dateList1 = [(2020,12,10),(2022,1,5),(2015,7,1),(2022,1,4)] : (int*int*int) list
+        val dateList2 = [(2022,10,23),(2022,11,1),(2022,1,2)] : (int*int*int) list
+        val dateList3 = [] : (int*int*int) list
+    in
+    (oldest(dateList1),
+    oldest(dateList2),
+    oldest(dateList3))
+    end
+
+
 val ans_first = provided_test1()
 val ans_second = provided_test2()
 val ans_third = provided_test3()
@@ -206,3 +248,5 @@ val ans_sixth = provided_test6()
 val ans_seventh = provided_test7()
 val ans_eighth = provided_test8()
 val ans_ninth = provided_test9()
+val ans_tenth = provided_test10()
+val ans_eleventh = provided_test11()
