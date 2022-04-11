@@ -48,7 +48,7 @@ fun dates_in_months (dateList : (int*int*int) list, monthList : int list) =
     [] => []
     | _ => dates_in_month(dateList, (hd monthList)) @ dates_in_months(dateList, (tl monthList))
 
-(*sixth*)
+(*sixth task*)
 fun get_nth (strList : string list, num : int) =
     let fun get_nth_count(strList2 : string list, from : int) =
         if null strList2
@@ -58,7 +58,7 @@ fun get_nth (strList : string list, num : int) =
         else get_nth_count(tl strList2, from + 1)
     in get_nth_count(strList, 1) end
 
-(*seventh*)
+(*seventh task*)
 fun date_to_string (date : int*int*int) =
     let val month_str = ["January",
     "February", "March", "April",
@@ -68,11 +68,25 @@ fun date_to_string (date : int*int*int) =
     fun get_str_month (months : string list, cnt : int) =
         case months of
         [] => ""
-        | _ => if (#2 date) = cnt then (hd months)
-               else get_str_month(tl months, cnt + 1)
+        | m::tl => if (#2 date) = cnt then m
+               else get_str_month(tl, cnt + 1)
     in 
         get_str_month(month_str, 1) ^ " " ^ Int.toString (#3 date) ^ ", " ^ Int.toString (#1 date)
     end
+
+(*eighth* task*)
+    fun number_before_reaching_sum (sum : int, numbersList : int list) =
+    case numbersList of
+    [] => 1
+    | _ => if (sum - (hd numbersList) > 0)
+           then number_before_reaching_sum(sum - hd numbersList, tl numbersList) + 1
+           else 1
+
+(*ninth* task*)
+    fun what_month (day : int) =
+    let val month_days = [31, 28,31,30,
+    31,30,31,31,30,31,30,31] : int list
+    in number_before_reaching_sum(day, month_days) end
 
 (*Test for first task*)
 fun provided_test1 () = 
@@ -161,6 +175,28 @@ fun provided_test7 () =
     date_to_string(date4))
     end
 
+(*Test for eighth task*)
+fun provided_test8 () = 
+    let val list1 = [12,44,12,67,2] : int list
+        val list2 = [1,2,3,4,5,6] : int list
+        val list3 = [1,1,1,2,2,1,1,1,1] : int list
+    in
+    (number_before_reaching_sum(58, list1),
+    number_before_reaching_sum(10, list2),
+    number_before_reaching_sum(4, list3))
+    end
+
+(*Test for ninth task*)
+fun provided_test9() =
+    let val day1 = 51 : int
+        val day2 = 365 : int
+        val day3 = 1 : int
+    in
+    (what_month(day1),
+    what_month(day2),
+    what_month(day3))
+    end
+
 val ans_first = provided_test1()
 val ans_second = provided_test2()
 val ans_third = provided_test3()
@@ -168,3 +204,5 @@ val ans_fourth = provided_test4()
 val ans_fifth = provided_test5()
 val ans_sixth = provided_test6()
 val ans_seventh = provided_test7()
+val ans_eighth = provided_test8()
+val ans_ninth = provided_test9()
