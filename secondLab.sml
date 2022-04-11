@@ -1,18 +1,8 @@
 (*First task*)
-fun is_order (firstDate : int*int*int, secondDate : int*int*int) =
-    if (#1 firstDate) > (#1 secondDate)
-    then false
-    else if (#1 firstDate) < (#1 secondDate)
-    then true
-    else
-        if (#2 firstDate) > (#2 secondDate)
-        then false
-        else if (#2 firstDate) < (#2 secondDate)
-        then true
-        else
-            if (#3 firstDate) < (#3 secondDate)
-            then true
-            else false
+fun is_older ((y1,m1,d1),(y2,m2,d2))=
+    if y1 > y2 then false else if y2 > y1 then true
+    else if m1 > m2 then false else if m2 > m1 then true
+    else if d1 < d2 then true else false
 
 (*Second task*)
 fun number_in_month (dateList : (int*int*int) list, month : int) =
@@ -23,11 +13,10 @@ fun number_in_month (dateList : (int*int*int) list, month : int) =
     else number_in_month(tl dateList, month)
 
 (*Also second task. Just alternative*)
-fun number_in_month2 (dateList : (int*int*int) list, month : int) =
-    case dateList of
-    [] => 0
-    | (_,m,_)::tl => if m = month then 1 + number_in_month2(tl, month)
-                     else number_in_month2(tl, month)
+fun number_in_month2 ([], _) = 0
+  | number_in_month2 ((_,m,_)::dates,month) =
+    if m = month then 1 + number_in_month2(dates, month)
+    else number_in_month2(dates, month)
 
 (*Third task*)
 fun number_in_months (dateList : (int*int*int) list, monthList : int list) =
@@ -95,16 +84,14 @@ fun month_range (day1 : int, day2 : int) =
     else what_month(day1)::month_range(day1 + 1, day2)
 
 (*eleventh task*)
-fun oldest (dateList : (int*int*int) list) =
-    case dateList of
-    [] => NONE
-    | _ => let fun is_older (dateList1 : (int*int*int) list, oldestDate : int*int*int) =
-                if null dateList1
-                then SOME (oldestDate)
-                else if is_order(oldestDate, (hd dateList1))
-                then is_older((tl dateList1), oldestDate)
-                else is_older((tl dateList1), (hd dateList1))
-            in is_older((tl dateList), (hd dateList)) end
+fun oldest ([]) = NONE
+  | oldest (date::dates) =
+    let fun older ([], oldestDate) = SOME oldestDate
+    | older (date::dates, oldestDate) =
+        if is_older(oldestDate, date)
+        then older(dates, oldestDate)
+        else older(dates, date)
+    in older(dates, date) end
 
 (*Test for first task*)
 fun provided_test1 () = 
@@ -113,12 +100,12 @@ fun provided_test1 () =
         val date3 = (2020,6,20)
         val date4 = (2020,7,20)
     in
-    (is_order (date1, date2),
-    is_order (date2, date1),
-    is_order (date1, date2),
-    is_order (date1, date1),
-    is_order (date3, date4),
-    is_order (date2, date3))
+    (is_older (date1, date2),
+    is_older (date2, date1),
+    is_older (date1, date2),
+    is_older (date1, date1),
+    is_older (date3, date4),
+    is_older (date2, date3))
     end
 
 (*Test for second task. Both functions*)
