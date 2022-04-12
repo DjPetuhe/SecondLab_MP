@@ -19,62 +19,56 @@ fun number_in_month2 ([], _) = 0
     else number_in_month2(dates, month)
 
 (*Third task*)
-fun number_in_months (dateList : (int*int*int) list, monthList : int list) =
-    case monthList of
-    [] => []
-    | _ => number_in_month2(dateList, (hd monthList)) :: number_in_months(dateList, (tl monthList))
+fun number_in_months (_, []) = []
+  | number_in_months (dateList : (int*int*int) list, month::monthes) =
+    number_in_month2(dateList, month) :: number_in_months(dateList, monthes)
 
 (*fourth task*)
-fun dates_in_month (dateList : (int*int*int) list, month : int) =
-    case dateList of
-    [] => []
-    | (_,m,_)::tl => if m = month then (hd dateList) :: dates_in_month(tl, month)
-                     else dates_in_month(tl, month)
+fun dates_in_month ([], _) = []
+  | dates_in_month (dateList : (int*int*int) list, month : int) =
+    if (#2 (hd dateList)) = month then (hd dateList) :: dates_in_month((tl dateList), month)
+    else dates_in_month((tl dateList), month)
 
 (*fifth task*)
-fun dates_in_months (dateList : (int*int*int) list, monthList : int list) =
-    case monthList of
-    [] => []
-    | _ => dates_in_month(dateList, (hd monthList)) @ dates_in_months(dateList, (tl monthList))
+fun dates_in_months (_, []) = []
+  | dates_in_months (dateList, month::monthes) =
+    dates_in_month(dateList, month) @ dates_in_months(dateList, monthes)
 
 (*sixth task*)
 fun get_nth (strList : string list, num : int) =
-    let fun get_nth_count(strList2 : string list, from : int) =
-        if null strList2
-        then ""
-        else if from = num
-        then hd strList2
-        else get_nth_count(tl strList2, from + 1)
+    let fun get_nth_count ([], _) = ""
+          | get_nth_count (str::strs, from : int) =
+            if from = num
+            then str
+            else get_nth_count(strs, from + 1)
     in get_nth_count(strList, 1) end
 
 (*seventh task*)
 fun date_to_string (date : int*int*int) =
     let val month_str = ["January",
-    "February", "March", "April",
-    "May", "June", "July", "August",
-    "September", "November", "October",
-    "December"] : string list
-    fun get_str_month (months : string list, cnt : int) =
-        case months of
-        [] => ""
-        | m::tl => if (#2 date) = cnt then m
-               else get_str_month(tl, cnt + 1)
+        "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "November", "October",
+        "December"] : string list
+        fun get_str_month ([], _) = ""
+          | get_str_month (month::monthes, cnt : int) =
+            if (#2 date) = cnt then month
+            else get_str_month(monthes, cnt + 1)
     in 
         get_str_month(month_str, 1) ^ " " ^ Int.toString (#3 date) ^ ", " ^ Int.toString (#1 date)
     end
 
 (*eighth* task*)
-    fun number_before_reaching_sum (sum : int, numbersList : int list) =
-    case numbersList of
-    [] => 1
-    | _ => if (sum - (hd numbersList) > 0)
-           then number_before_reaching_sum(sum - hd numbersList, tl numbersList) + 1
-           else 1
+fun number_before_reaching_sum (_, []) = 1
+  | number_before_reaching_sum (sum, number::numbers) =
+    if (sum - number > 0)
+    then number_before_reaching_sum(sum - number, numbers) + 1
+    else 1
 
 (*ninth* task*)
-    fun what_month (day : int) =
+fun what_month (day : int) =
     let val month_days = [31, 28,31,30,
-    31,30,31,31,30,31,30,31] : int list
+        31,30,31,31,30,31,30,31] : int list
     in number_before_reaching_sum(day, month_days) end
 
 (*tenth task*)
