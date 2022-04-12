@@ -59,17 +59,17 @@ fun date_to_string (date : int*int*int) =
     end
 
 (*eighth* task*)
-fun number_before_reaching_sum (_, []) = 1
+fun number_before_reaching_sum (_, []) = 0
   | number_before_reaching_sum (sum, number::numbers) =
     if (sum - number > 0)
     then number_before_reaching_sum(sum - number, numbers) + 1
-    else 1
+    else 0
 
 (*ninth* task*)
 fun what_month (day : int) =
     let val month_days = [31, 28,31,30,
         31,30,31,31,30,31,30,31] : int list
-    in number_before_reaching_sum(day, month_days) end
+    in number_before_reaching_sum(day, month_days) + 1 end
 
 (*tenth task*)
 fun month_range (day1 : int, day2 : int) =
